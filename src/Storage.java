@@ -22,6 +22,9 @@ public class Storage {
 
 	private static final String DEFAULT_NAME = "data.json";
 	private static final String FILE_TYPE = ".json";
+	
+	private JSONObject jsonObj;
+	private JSONArray jsonArr;
 
 	/************** Data Members **********************/
 
@@ -54,10 +57,8 @@ public class Storage {
 
 	public void write(TaskStub task){
 
-		JSONObject jsonObj = new JSONObject();
-		JSONArray arr = new JSONArray();
-		arr.add("Desc: " + task.desc);
-		jsonObj.put("Task", arr);
+		jsonArr.add(task.desc);
+		jsonObj.put("Task", jsonArr);
 
 		try {
 			writeToFile(jsonObj);
@@ -69,15 +70,12 @@ public class Storage {
 	}
 
 	public void write(TaskStub task, DateStub date){
-		JSONObject jsonObj = new JSONObject();
+
+		jsonArr.add("Description: " + task.desc);
+		jsonArr.add("Date:" + date.date + date.time);
 
 
-		JSONArray arr = new JSONArray();
-		arr.add("Description: " + task.desc);
-		arr.add("Date:" + date.date + date.time);
-
-
-		jsonObj.put("Task", arr);
+		jsonObj.put("Task", jsonArr);
 
 		try{
 			writeToFile(jsonObj);
@@ -131,13 +129,16 @@ public class Storage {
 
 
 	private void writeToFile(JSONObject obj) throws IOException{
-		PrintWriter printWriter = new PrintWriter(new FileWriter(currentFile, true));
-		printWriter.write(obj.toJSONString());
-		printWriter.close();	
+		FileWriter writer = new FileWriter(currentFile);
+		writer.write(obj.toJSONString());
+		writer.close();	
 	}
 
 
 	private void init(){
+		jsonObj  = new JSONObject();
+		jsonArr = new JSONArray();
+		
 		try {
 			File file = new File(currentFile);
 

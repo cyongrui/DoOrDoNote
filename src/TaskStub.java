@@ -7,4 +7,8 @@ public class TaskStub {
 	public TaskStub(){
 		desc = "task description";
 	}
+	
+	public TaskStub(int i){
+		desc = "test";
+	}
 }

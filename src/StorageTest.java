@@ -19,7 +19,7 @@ public class StorageTest {
 	
 	@After
 	public void tearDown(){
-		File test = new File(TEST_NAME);
+		File test = new File(TEST_NAME+".json");
 		File file = new File(DEFAULT_NAME);
 		test.delete();
 		file.delete();
