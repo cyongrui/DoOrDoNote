@@ -14,12 +14,12 @@ Storage(String name)
 
 ##### Methods:
 
- |Type|Method|Description|
- | ---------|----------|----------|
- |String	|getFileName() | get current file name |
- |void	| clear()|clear current file|
- |void|	write(Task)|-write Task Object to file|
- |ArrayList<Task>|read()|return Arraylist of all tasks in file|
- |void|	revert()|undo previous change|
+|Type|Method|Description|
+| ---------|----------|----------|
+|String	|getFileName() | get current file name |
+|void	| clear()|clear current file|
+|void|	write(Task)|-write Task Object to file|
+|ArrayList<Task>|read()|return Arraylist of all tasks in file|
+|void|	revert()|undo previous change|
  
- // Need to know Task Object parameters
+// Need to know Task Object parameters
