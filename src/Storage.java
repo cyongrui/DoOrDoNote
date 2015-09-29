@@ -1,20 +1,22 @@
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.Stack;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /*
  * 
  *  @author: Chen Yongrui
- * 
+ *  Still need to resolve hash collision
+ *  Undo/redo needs work
+ *  Need more testing
  */
 
 
@@ -22,9 +24,14 @@ public class Storage {
 
 	private static final String DEFAULT_NAME = "data.json";
 	private static final String FILE_TYPE = ".json";
-	
-	private JSONObject jsonObj;
-	private JSONArray jsonArr;
+	private static final int HASH_SIZE = 4099;
+
+	final Gson gson = new Gson();
+	Map<Integer, Task> map = new HashMap<>(HASH_SIZE);
+	final Stack<String> undo = new Stack<String>();
+	final Stack<String> redo = new Stack<String>();
+
+
 
 	/************** Data Members **********************/
 
@@ -35,7 +42,7 @@ public class Storage {
 
 	public Storage(){
 		currentFile = DEFAULT_NAME;
-		init();
+		initialize();
 	}
 
 	public Storage(String name){
@@ -43,7 +50,7 @@ public class Storage {
 			name += FILE_TYPE;
 		}
 		currentFile = name;
-		init();
+		initialize();
 	}
 
 	/**************** Accessors ***********************/
@@ -55,43 +62,49 @@ public class Storage {
 
 	/**************** Methods ***********************/
 
-	public void write(TaskStub task){
 
-		jsonArr.add(task.desc);
-		jsonObj.put("Task", jsonArr);
+	public void setFile(String fileName){
+		currentFile = fileName;
+	}
 
+	private void initialize(){
 		try {
-			writeToFile(jsonObj);
-		} 
-
+			File file = new File(currentFile);
+			if(!file.exists()){
+				file.createNewFile();
+				undo.push("");
+			}			
+			else{
+				map = jsonToMap();
+				undo.push(getFileString(currentFile));
+			}
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void write(TaskStub task, DateStub date){
 
-		jsonArr.add("Description: " + task.desc);
-		jsonArr.add("Date:" + date.date + date.time);
+	public void write(Task task){
 
-
-		jsonObj.put("Task", jsonArr);
-
+		map.put(task.hashCode()%HASH_SIZE, task);
+		String json = gson.toJson(map);
 		try{
-			writeToFile(jsonObj);
+			writeToFile(json);
 		}
 
 		catch(IOException e){
 			e.printStackTrace();
 		}
-
-
+		undo.push(json);
 	}
+
 
 	public void clear(){
 		try{
 			FileWriter fw = new FileWriter(currentFile);
 			fw.close();
+			undo.push("");
 		}
 
 		catch(IOException e){
@@ -100,56 +113,70 @@ public class Storage {
 	}
 
 
-	public void read(){
-		
-		ArrayList<TaskStub> arr = new ArrayList<TaskStub>();
-		JSONParser parser = new JSONParser();
-
-		try{
-			Object obj = parser.parse(new FileReader(currentFile));
-			JSONObject jsonObj = (JSONObject) obj;
-			
-			JSONArray tasks = (JSONArray) jsonObj.get("Task");
-			Iterator<TaskStub> iterator = tasks.iterator();
-			while(iterator.hasNext()){
-				System.out.println(iterator.next());
-			}
-
-		}
-
-		catch (IOException e){
-			e.printStackTrace();
-		}
-
-		catch (ParseException e){
-			e.printStackTrace();
-		}
-
+	//This method reads the current json file and returns an
+	//array of Task
+	public Task[] read() throws IOException{
+		Task[] arrTask;
+		Map<Integer, Task> jsonMap = jsonToMap();
+		arrTask = jsonMap.values().toArray(new Task[jsonMap.size()]);
+		return arrTask;
 	}
 
 
-	private void writeToFile(JSONObject obj) throws IOException{
+	public boolean undo() {
+		if(!undo.isEmpty()){
+			redo.push(undo.pop());
+			if(!undo.isEmpty()){
+				try{
+					writeToFile(undo.peek());
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	public boolean redo(){
+		if(!redo.isEmpty()){
+			try{
+				writeToFile(redo.peek());
+				undo.push(redo.pop());
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	// This method gets json string from currentFile and map it
+	private Map<Integer, Task> jsonToMap() throws IOException {
+		String json = getFileString(currentFile);
+		Type type = new TypeToken<Map<Integer, Task>>(){}.getType();
+		Map<Integer, Task> jsonMap = gson.fromJson(json, type);
+		return jsonMap;
+	}
+
+
+
+	private void writeToFile(String json) throws IOException{
 		FileWriter writer = new FileWriter(currentFile);
-		writer.write(obj.toJSONString());
+		writer.write(json);
 		writer.close();	
 	}
 
 
-	private void init(){
-		jsonObj  = new JSONObject();
-		jsonArr = new JSONArray();
-		
-		try {
-			File file = new File(currentFile);
 
-			if(!file.exists()){
-				file.createNewFile();
-			}
-		}
+	// This method reads strings from a file
+	public static String getFileString(String fileName) throws IOException{
 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+		byte[] encoded = Files.readAllBytes(Paths.get(fileName));
+		return new String(encoded);
 	}
 
 
