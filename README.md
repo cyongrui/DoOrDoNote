@@ -19,5 +19,6 @@ Storage(String name)
 |String	|getFileName() | get current file name |
 |void	| clear()|clear current file|
 |void|	write(Task)|write Task Object to file|
-|ArrayList<Task>|read()|return Arraylist of all tasks in file|
-|void|	revert()|undo previous change|
+|Task[]|read()|return Task array of all tasks in file|
+|boolean|	undo()|undo previous change. Returns true if successful|
+|boolean|	redo()|redo previous undo. Returns true if successful|
