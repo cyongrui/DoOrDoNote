@@ -1,6 +1,5 @@
 package doordonote.logic;
 
-public class Logic {
-	
-	
+public interface Command {
+
 }
