@@ -225,16 +225,16 @@ public class Storage {
 		return new String(encoded);
 	}
 
-	public String add(String task, Date startDate, Date endDate) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public String update(int indexOfTaskToUpdate, String task, Date startDate, Date endDate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public String add(String task, Date startDate, Date endDate) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//
+//	public String update(int indexOfTaskToUpdate, String task, Date startDate, Date endDate) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 
 }
