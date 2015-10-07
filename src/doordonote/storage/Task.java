@@ -1,42 +1,58 @@
+package doordonote.storage;
+
+import java.util.Date;
 
 public class Task {
 	
+	
 	private String desc;
-	private String time;
-	private String date;
+	private Date startDate;
+	private Date endDate;
 	private int priority;
+	private int type;
 	
 	public Task(){
 		desc = "task description";
 	}
 	
-	public Task(String desc, String date, String time, int priority){
+	public Task(String desc, int priority){
 		this.desc = desc;
-		this.date = date;
-		this.time = time;
+		this.type=0;
+	}
+	
+	public Task(String desc, Date endDate, int priority){
+		this.desc = desc;
+		this.endDate = endDate;
 		this.priority = priority;
+		this.type=1;
+	}
+	
+	public Task(String desc, Date startDate, Date endDate, int priority){
+		this.desc = desc;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.priority = priority;
+		this.type = 2;
 	}
 	
 	public String getDesc(){
 		return desc;
 	}
 	
-	public String getDate(){
-		return date;
+	public int getTaskStartDate(){
+		return startDate.getDate();
 	}
 	
-	public String getTime(){
-		return time;
-	}
+	
 	
 	public int getPriority(){
 		return priority;
 	}
 	
 	public String toString(){
-		String str = getDesc();
-		str += getDate();
-		str += getTime();
+		String str = "Description: ";
+		str += getDesc();
+		str += ". ";
 		return str;
 	}
 	

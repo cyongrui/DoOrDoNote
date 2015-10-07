@@ -1,3 +1,5 @@
+package doordonote.storage;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,6 +9,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Type;
 import java.util.Stack;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,9 +20,11 @@ import com.google.gson.reflect.TypeToken;
 /*
  * 
  *  @author: Chen Yongrui
- *  Still need to resolve hash collision
- *  Undo/redo needs work
+ *  Still need to resolve hash collision??
+ *  Undo/redo needs work and will not work for update
  *  Need more testing
+ *  set method might need checking
+ *  no task creator yet
  */
 
 
@@ -26,16 +34,19 @@ public class Storage {
 	private static final String FILE_TYPE = ".json";
 	private static final int HASH_SIZE = 4099;
 
-	final Gson gson = new Gson();
-	Map<Integer, Task> map = new HashMap<>(HASH_SIZE);
-	final Stack<String> undo = new Stack<String>();
-	final Stack<String> redo = new Stack<String>();
+	private final Gson gson = new Gson();
+	private Map<Integer, Task> map = new HashMap<>(HASH_SIZE);
+	private final Stack<String> undo = new Stack<String>();
+	private final Stack<String> redo = new Stack<String>();
+	private ArrayList<Task> listTask;
+	private ArrayList<Integer> keys = new ArrayList<Integer>();
+	//	private Set<Integer> keys;
 
 
 
 	/************** Data Members **********************/
 
-	private String currentFile;
+	private static String currentFile;
 
 
 	/************** Constructors **********************/
@@ -76,6 +87,10 @@ public class Storage {
 			}			
 			else{
 				map = jsonToMap();
+				for (Integer key: map.keySet()){
+					keys.add(key);
+				}
+				listTask = read();
 				undo.push(getFileString(currentFile));
 			}
 		}
@@ -87,7 +102,9 @@ public class Storage {
 
 	public void write(Task task){
 
-		map.put(task.hashCode()%HASH_SIZE, task);
+		Integer taskKey = task.hashCode()%HASH_SIZE;
+		map.put(taskKey, task);
+		keys.add(taskKey);
 		String json = gson.toJson(map);
 		try{
 			writeToFile(json);
@@ -112,14 +129,43 @@ public class Storage {
 		}
 	}
 
+	public void delete(int id){
+
+		if(!map.isEmpty()){
+			Integer deleteId = keys.get(id);
+			System.out.println(deleteId.toString());
+			map.remove(keys.get(id));
+			String json = gson.toJson(map);
+			undo.add(json);
+			System.out.println(json);
+			try{
+				writeToFile(json);
+			}
+
+			catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+
+		else{
+			// Throw Exception here
+			System.out.println("No task to delete");
+		}
+	}
+	
+	public void update(Task newTask, int id){
+		delete(id);
+		write(newTask);
+	}
 
 	//This method reads the current json file and returns an
 	//array of Task
-	public Task[] read() throws IOException{
+	public ArrayList<Task> read() throws IOException{
 		Task[] arrTask;
 		Map<Integer, Task> jsonMap = jsonToMap();
 		arrTask = jsonMap.values().toArray(new Task[jsonMap.size()]);
-		return arrTask;
+		listTask = new ArrayList<Task>(Arrays.asList(arrTask));
+		return listTask;
 	}
 
 
@@ -136,11 +182,11 @@ public class Storage {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 	public boolean redo(){
 		if(!redo.isEmpty()){
 			try{
