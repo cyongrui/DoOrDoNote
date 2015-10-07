@@ -129,7 +129,7 @@ public class Storage {
 		}
 	}
 
-	public void delete(int id){
+	public String delete(int id){
 
 		if(!map.isEmpty()){
 			Integer deleteId = keys.get(id);
@@ -223,6 +223,25 @@ public class Storage {
 
 		byte[] encoded = Files.readAllBytes(Paths.get(fileName));
 		return new String(encoded);
+	}
+
+	public String add(String task, Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String add(String task, Date endDate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String add(String task) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public String update(int indexOfTaskToUpdate){
+		
 	}
 
 
