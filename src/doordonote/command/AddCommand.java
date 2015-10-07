@@ -30,14 +30,7 @@ public class AddCommand extends RedoableCommand {
 			return "Error in storage object";
 		} else {
 			String returnMsg = null;
-			if (startDate != null) {
-				returnMsg = storageObj.add(task, startDate, endDate);
-			} else if (endDate != null) {
-				returnMsg = storageObj.add(task, endDate);
-			} else {
-				returnMsg = storageObj.add(task);
-			}
-			
+			returnMsg = storageObj.add(task, startDate, endDate);
 			return returnMsg;		
 		}
 	}

@@ -230,18 +230,10 @@ public class Storage {
 		
 	}
 
-	public String add(String task, Date endDate) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	public String add(String task) {
+	public String update(int indexOfTaskToUpdate, String task, Date startDate, Date endDate) {
 		// TODO Auto-generated method stub
-		
-	}
-	
-	public String update(int indexOfTaskToUpdate){
-		
+		return null;
 	}
 
 
