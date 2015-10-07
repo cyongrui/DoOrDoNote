@@ -17,7 +17,7 @@ public class StorageTest {
 	private static final String NAME_CUSTOM = "custom";
 	private static final String NAME_TESTWRITE = "{\"195\":{\"desc\":\"Do CS homework\",\"time\":\"00:00\",\"date\":\"6-11\",\"priority\":1},\"1320\":{\"desc\":\"Flying Pig\",\"time\":\"16:30\",\"date\":\"14-4\",\"priority\":0},\"3212\":{\"desc\":\"Swimming\",\"time\":\"21:01\",\"date\":\"12-3\",\"priority\":2},\"3730\":{\"desc\":\"Running\",\"time\":\"17:30\",\"date\":\"29-9\",\"priority\":0}}";
 
-	Storage str = new Storage(NAME_TEST);
+	StorageBackEnd str = new StorageBackEnd(NAME_TEST);
 	
 //	@Before
 	public void setup(){
@@ -38,7 +38,7 @@ public class StorageTest {
 	
 	@Test
 	public void testCustomFileName(){
-		Storage str = new Storage(NAME_CUSTOM);
+		StorageBackEnd str = new StorageBackEnd(NAME_CUSTOM);
 		assertEquals(str.getFileName(), "custom.json");
 	}
 	
@@ -46,13 +46,13 @@ public class StorageTest {
 	public void testStorageClear() throws IOException{
 		addTaskToStorage();
 		str.clear();
-		assertEquals(Storage.getFileString(NAME_TEST), "");
+		assertEquals(StorageBackEnd.getFileString(NAME_TEST), "");
 	}
 	
 	@Test
 	public void testStorageWrite() throws IOException{
 		addTaskToStorage();
-		assertEquals(Storage.getFileString(NAME_TEST), NAME_TESTWRITE);
+		assertEquals(StorageBackEnd.getFileString(NAME_TEST), NAME_TESTWRITE);
 	}
 	
 	@Test

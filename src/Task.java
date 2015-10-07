@@ -3,30 +3,27 @@ import java.util.Date;
 public class Task {
 	
 	
-	private String desc;
+	private String description;
 	private Date startDate;
 	private Date endDate;
 	private int priority;
 	private int type;
 	
-	public Task(){
-		desc = "task description";
-	}
 	
-	public Task(String desc, int priority){
-		this.desc = desc;
+	public Task(String desc){
+		this.description = desc;
 		this.type=0;
 	}
 	
-	public Task(String desc, Date endDate, int priority){
-		this.desc = desc;
+	public Task(String desc, Date endDate){
+		this.description = desc;
 		this.endDate = endDate;
 		this.priority = priority;
 		this.type=1;
 	}
 	
-	public Task(String desc, Date startDate, Date endDate, int priority){
-		this.desc = desc;
+	public Task(String desc, Date startDate, Date endDate){
+		this.description = desc;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.priority = priority;
@@ -34,7 +31,7 @@ public class Task {
 	}
 	
 	public String getDesc(){
-		return desc;
+		return description;
 	}
 	
 	public int getTaskStartDate(){
@@ -48,9 +45,9 @@ public class Task {
 	}
 	
 	public String toString(){
-		String str = "Description: ";
+		String str = "\"";
 		str += getDesc();
-		str += ". ";
+		str += "\"";
 		return str;
 	}
 	
