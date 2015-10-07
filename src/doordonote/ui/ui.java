@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 
 public class UI {
 
-	private static final String MESSAGE_WELCOME = "Welcome to Collate!";
+    private static final String MESSAGE_WELCOME = "Welcome to Collate!";
     private static final String MESSAGE_COMMAND_PROMPT = "Command: ";
     private static final String MESSAGE_EXIT = "Goodbye!";
 
@@ -105,14 +105,14 @@ public class UI {
     }
 
     public void showFeedback(String output) {
-    	System.out.printf(output);
+    	System.out.println(output);
     }
 
 	public static void main(String[] args) {
 
 		UI ui = new UI();
 		
-		System.out.printf(MESSAGE_WELCOME);
+		System.out.println(MESSAGE_WELCOME);
 
 		while (true) {
 			String command = ui.getUserInput();
