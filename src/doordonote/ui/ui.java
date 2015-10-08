@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 
 public class UI {
 
-    private static final String MESSAGE_WELCOME = "Welcome to Collate!";
+    private static final String MESSAGE_WELCOME = "Welcome to Do Or Do Note!";
     private static final String MESSAGE_COMMAND_PROMPT = "Command: ";
     private static final String MESSAGE_EXIT = "Goodbye!";
 
