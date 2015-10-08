@@ -9,7 +9,7 @@ public class DeleteCommand extends RedoableCommand {
 	
 	@Override
 	public String run() {
-		if (storageObj != null) {
+		if (storageObj == null) {
 			return "Error in storage object";
 		} else {
 			return storageObj.delete(indexOfTaskToDelete);

@@ -1,5 +1,6 @@
 package doordonote.ui;
 
+import doordonote.logic.Logic;
 import doordonote.storage.Task;
 
 import java.io.*;
@@ -66,41 +67,55 @@ public class UI {
         
         int count = 1;
 
-        System.out.print(EVENTS_HEADER);
-        for(int i=0; i<taskList.size(); i++) {
-        	if(taskList.get(i).getTaskType() == 2) {
+//        System.out.print(EVENTS_HEADER);
+//        for(int i=0; i<taskList.size(); i++) {
+//        	if(taskList.get(i).getTaskType() == 2) {
+//        		haveEvents = true;
+//        		System.out.println(count++ + ". " + taskList.get(i).getDesc() + " from " + ft.format(taskList.get(i).getTaskStartDate()) + " to " + ft.format(taskList.get(i).getTaskEndDate()));
+//        	}
+//        }
+//
+//        if(haveEvents == false) {
+//        	System.out.println("*None*");
+//        }
+//        
+//        System.out.print(DEADLINES_HEADER);
+//        for(int j=0; j<taskList.size(); j++) {
+//        	if(taskList.get(j).getTaskType() == 1) {
+//        		haveDeadlines = true;
+//        		System.out.println(count++ + ". " + taskList.get(j).getDesc() + " by " + ft.format(taskList.get(j).getTaskEndDate()));
+//        	}
+//        }
+//
+//        if(haveDeadlines == false) {
+//        	System.out.println("*None*");
+//        }
+//
+//        System.out.print(FLOATING_TASK_HEADER);
+//        for(int k=0; k<taskList.size(); k++) {
+//        	if(taskList.get(k).getTaskType() == 0) {
+//        		haveFloatingTasks = true;
+//        		System.out.println(count++ + ". " + taskList.get(k).getDesc());
+//        	}
+//        }
+        
+        for (int i = 0; i < taskList.size(); i++) {
+        	if(taskList.get(i).getTaskType() == 0) {
+        		haveFloatingTasks = true;
+        		System.out.println(count++ + ". " + taskList.get(i).getDesc());
+        	} else if (taskList.get(i).getTaskType() == 1) {
+        		haveDeadlines = true;
+        		System.out.println(count++ + ". " + taskList.get(i).getDesc() + " by " + ft.format(taskList.get(i).getTaskEndDate()));
+        	} else {
         		haveEvents = true;
         		System.out.println(count++ + ". " + taskList.get(i).getDesc() + " from " + ft.format(taskList.get(i).getTaskStartDate()) + " to " + ft.format(taskList.get(i).getTaskEndDate()));
         	}
-        }
+			
+		}
 
-        if(haveEvents == false) {
-        	System.out.println("*None*");
-        }
-        
-        System.out.print(DEADLINES_HEADER);
-        for(int j=0; j<taskList.size(); j++) {
-        	if(taskList.get(j).getTaskType() == 1) {
-        		haveDeadlines = true;
-        		System.out.println(count++ + ". " + taskList.get(j).getDesc() + " by " + ft.format(taskList.get(j).getTaskEndDate()));
-        	}
-        }
-
-        if(haveDeadlines == false) {
-        	System.out.println("*None*");
-        }
-
-        System.out.print(FLOATING_TASK_HEADER);
-        for(int k=0; k<taskList.size(); k++) {
-        	if(taskList.get(k).getTaskType() == 0) {
-        		haveFloatingTasks = true;
-        		System.out.println(count++ + ". " + taskList.get(k).getDesc());
-        	}
-        }
-
-        if(haveDeadlines == false) {
-        	System.out.println("*None*");
-        }
+//        if(haveDeadlines == false) {
+//        	System.out.println("*None*");
+//        }
 
     }
 
@@ -113,6 +128,7 @@ public class UI {
 		UI ui = new UI();
 		
 		System.out.println(MESSAGE_WELCOME);
+		ui.displayTasks();			
 
 		while (true) {
 			String command = ui.getUserInput();

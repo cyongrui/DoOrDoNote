@@ -1,7 +1,6 @@
-package doordonote.ui;
+package doordonote.parser;
 
 import doordonote.command.*;
-import java.io.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -9,61 +8,62 @@ import java.text.ParseException;
 public class Parser {
 
 	public Command parse(String command) {
-		
+
 		String commandType = getCommandType(command);
-		
+
 		switch (commandType) {
-		
+
 		case "add":
-			
+
 			return parseAdd(command);
-			
+
 		case "delete":
-			
+
 			return parseDelete(command);
-	    
-	        case "update":
-	        	
-	        	return parseUpdate(command);
-		
+
+		case "update":
+
+			return parseUpdate(command);
+
 		default:
-			
+
 			System.out.println("Error");
 			return null;
 
-		}	
+		}
 	}
 
 	private static Command parseAdd(String command) {
-		
+
 		String commandBody = removeFirstWord(command);
 		String[] parameters = commandBody.split(" ");
-		
+		Command commandAddObj = null;
 		for (int i = 0; i < parameters.length; i++) {
-			if(parameters[i].toLowerCase().equals("from")) {
+			if (parameters[i].toLowerCase().equals("from")) {
 				String[] parameters2 = commandBody.split("from ");
-        		        String task = parameters2[0];
+				String task = parameters2[0];
 
-        		        String[] time = parameters2[1].split("to ");
-        		        Date startDate = parseDate(time[0]);
-        		        Date endDate = parseDate(time[1]);
+				String[] time = parameters2[1].split("to ");
+				Date startDate = parseDate(time[0]);
+				Date endDate = parseDate(time[1]);
 
-        		        Command commandAddObj = new AddCommand(task, startDate, endDate);
-        	        }
-        	        else if(parameters[i].toLowerCase().equals("by")) {
-        		        String[] parameters2 = commandBody.split("by ");
-        		        String task = parameters2[0];
-        		        Date endDate = parseDate(parameters2[1]);
+				commandAddObj = new AddCommand(task, startDate, endDate);
+				return commandAddObj;
+			}
+		}
+		for (int i = 0; i < parameters.length; i++) {
+			if (parameters[i].toLowerCase().equals("by")) {
+				String[] parameters2 = commandBody.split("by ");
+				String task = parameters2[0];
+				Date endDate = parseDate(parameters2[1]);
 
-        		        Command commandAddObj = new AddCommand(task, endDate);
-        	        }
-        	        else {
-        		        String task = commandBody;
+				commandAddObj = new AddCommand(task, endDate);
+				return commandAddObj;
+			}
+		}
+		String task = commandBody;
+		commandAddObj = new AddCommand(task);
 
-        		        Command commandAddObj = new AddCommand(task);
-        	        }
-                }
-		
 		return commandAddObj;
 
 	}
@@ -81,69 +81,79 @@ public class Parser {
 		String commandBody = removeFirstWord(command);
 		String[] parameters = commandBody.split(" ");
 
-		int indexOfTaskToUpdate = Integer.parseInt(parameters[0]);
-            
-                for (int i = 1; i < parameters.length; i++) {
-                	if(parameters[i].toLowerCase().equals("from")) {
-                		String[] parameters2 = commandBody.split("from ");
-        		        String task = parameters2[0];
+		Command commandUpdateObj = null;
+		int indexOfTaskToUpdate;
+		try {
+			indexOfTaskToUpdate = Integer.parseInt(parameters[0]);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 
-        		        String[] time = parameters2[1].split("to ");
-        		        Date startDate = parseDate(time[0]);
-        		        Date endDate = parseDate(time[1]);
+		commandBody = removeFirstWord(commandBody);
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].toLowerCase().equals("from")) {
+				String[] parameters2 = commandBody.split("from ");
+				String task = parameters2[0];
 
-        		        Command commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task, startDate, endDate);
-        	        }
-        	        else if(parameters[i].toLowerCase().equals("by")) {
-        		        String[] parameters2 = commandBody.split("by ");
-        		        String task = parameters2[0];
-        		        Date endDate = parseDate(parameters2[1]);
+				String[] time = parameters2[1].split("to ");
+				Date startDate = parseDate(time[0]);
+				Date endDate = parseDate(time[1]);
 
-        		        Command commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task, endDate);
-        	        }
-        	        else {
-        		        String task = commandBody;
+				commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task, startDate, endDate);
+				return commandUpdateObj;
+			}
+		}
 
-        		        Command commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task);
-                 	}
-               }
-               
-               return commandUpdateObj;
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].toLowerCase().equals("by")) {
+				String[] parameters2 = commandBody.split("by ");
+				String task = parameters2[0];
+				Date endDate = parseDate(parameters2[1]);
+
+				commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task, endDate);
+				return commandUpdateObj;
+			}
+		}
+
+		String task = commandBody;
+		commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task);
+
+		return commandUpdateObj;
 	}
 
 	private static Date parseDate(String dateInString) {
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM hh:mm");
-                Date date;
-                
-                try {
-                	date = formatter.parse(dateInString);
-                } 
-                catch (ParseException e) {
-                        ;
-                }
+		Date date = null;
 
-                return date;
+		try {
+			date = formatter.parse(dateInString);
+		} catch (ParseException e) {
+			;
+		}
+
+		return date;
 
 	}
 
 	private static String getCommandType(String command) {
-		
+
 		String commandType = getFirstWord(command).toLowerCase();
 		return commandType;
 
 	}
 
 	private static String getFirstWord(String command) {
-		
+
 		String firstWord = command.trim().split("\\s+")[0];
 		return firstWord;
-	
+
 	}
-	
+
 	private static String removeFirstWord(String command) {
-	
+
 		return command.replace(getFirstWord(command), "").trim();
-		
-	}	
+
+	}
 }

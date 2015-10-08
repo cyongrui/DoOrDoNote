@@ -8,7 +8,7 @@ public class Task {
 	private String description;
 	private Date startDate;
 	private Date endDate;
-	private int priority;
+//	private int priority;
 	private int type;
 	
 	
@@ -20,7 +20,7 @@ public class Task {
 	public Task(String desc, Date endDate){
 		this.description = desc;
 		this.endDate = endDate;
-		this.priority = priority;
+//		this.priority = priority;
 		this.type=1;
 	}
 	
@@ -28,7 +28,7 @@ public class Task {
 		this.description = desc;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.priority = priority;
+//		this.priority = priority;
 		this.type = 2;
 	}
 	
@@ -36,21 +36,29 @@ public class Task {
 		return description;
 	}
 	
-	public int getTaskStartDate(){
-		return startDate.getDate();
+	public Date getTaskStartDate(){
+		return startDate;
 	}
 	
 	
 	
-	public int getPriority(){
-		return priority;
-	}
+//	public int getPriority(){
+//		return priority;
+//	}
 	
 	public String toString(){
 		String str = "\"";
 		str += getDesc();
 		str += "\"";
 		return str;
+	}
+
+	public int getTaskType() {
+		return type;
+	}
+
+	public Date getTaskEndDate() {
+		return endDate;
 	}
 	
 }

@@ -1,6 +1,8 @@
 package doordonote.storage;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 public class Storage implements StorageInterface {
 
@@ -19,14 +21,28 @@ public class Storage implements StorageInterface {
 	}
 
 	public String add(String description, Date startDate, Date endDate) {
-		Task task = new Task(description, startDate, endDate);
+		Task task = null;
+		if (startDate != null) {
+			task = new Task(description, startDate, endDate);
+		} else if (endDate != null) {
+			task = new Task(description, endDate);
+		} else {
+			task = new Task(description);
+		}
 		storageBackEnd.write(task);
 		return String.format(MESSAGE_ADD, task);
 	}
 
 
 	public String update(int indexOfTaskToUpdate, String description, Date startDate, Date endDate) {
-		Task updatedTask = new Task(description, startDate, endDate);
+		Task updatedTask = null;
+		if (startDate != null) {
+			updatedTask = new Task(description, startDate, endDate);
+		} else if (endDate != null) {
+			updatedTask = new Task(description, endDate);
+		} else {
+			updatedTask = new Task(description);
+		}
 		storageBackEnd.update(indexOfTaskToUpdate, updatedTask);
 		return String.format(MESSAGE_UPDATE, updatedTask);
 	}
@@ -34,5 +50,9 @@ public class Storage implements StorageInterface {
 	public String delete(int indexOfTaskToDelete){
 		storageBackEnd.delete(indexOfTaskToDelete);
 		return MESSAGE_DELETE;
+	}
+
+	public List<Task> read() throws IOException {
+		return storageBackEnd.read();
 	}
 }

@@ -133,7 +133,8 @@ public class StorageBackEnd {
 
 		if(!map.isEmpty()){
 //			Integer deleteId = keys.get(indexOfTaskToDelete);
-			map.remove(keys.get(indexOfTaskToDelete));
+			map.remove(keys.get(indexOfTaskToDelete-1));
+			keys.remove(indexOfTaskToDelete-1);
 			String json = gson.toJson(map);
 			undo.add(json);
 			try{
