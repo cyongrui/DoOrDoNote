@@ -38,8 +38,11 @@ public class Parser {
 		String commandBody = removeFirstWord(command);
 		String[] parameters = commandBody.split(" ");
 		Command commandAddObj = null;
+		boolean haveEvents = false;
+		boolean haveDeadlines = false;
 		for (int i = 0; i < parameters.length; i++) {
 			if (parameters[i].toLowerCase().equals("from")) {
+				haveEvents = true;
 				String[] parameters2 = commandBody.split("from ");
 				String task = parameters2[0];
 
@@ -51,21 +54,25 @@ public class Parser {
 				return commandAddObj;
 			}
 		}
-		for (int i = 0; i < parameters.length; i++) {
-			if (parameters[i].toLowerCase().equals("by")) {
-				String[] parameters2 = commandBody.split("by ");
-				String task = parameters2[0];
-				Date endDate = parseDate(parameters2[1]);
+		if(haveEvents == false) {
+			for (int i = 0; i < parameters.length; i++) {
+				if (parameters[i].toLowerCase().equals("by")) {
+					haveDeadlines = true;
+					String[] parameters2 = commandBody.split("by ");
+				        String task = parameters2[0];
+				        Date endDate = parseDate(parameters2[1]);
 
-				commandAddObj = new AddCommand(task, endDate);
-				return commandAddObj;
-			}
+				        commandAddObj = new AddCommand(task, endDate);
+				        return commandAddObj;
+			        }
+		        }
 		}
-		String task = commandBody;
-		commandAddObj = new AddCommand(task);
+		if(haveEvents == false && haveDeadlines == false) {
+			String task = commandBody;
+		        commandAddObj = new AddCommand(task);
 
-		return commandAddObj;
-
+		        return commandAddObj;
+		}
 	}
 
 	private static Command parseDelete(String command) {
@@ -91,8 +98,11 @@ public class Parser {
 		}
 
 		commandBody = removeFirstWord(commandBody);
+		boolean haveEvents = false;
+		boolean haveDeadlines = false;
 		for (int i = 1; i < parameters.length; i++) {
 			if (parameters[i].toLowerCase().equals("from")) {
+				haveEvents = true;
 				String[] parameters2 = commandBody.split("from ");
 				String task = parameters2[0];
 
@@ -104,22 +114,25 @@ public class Parser {
 				return commandUpdateObj;
 			}
 		}
+                if(haveEvents == false) {
+			for (int i = 0; i < parameters.length; i++) {
+				if (parameters[i].toLowerCase().equals("by")) {
+					haveDeadlines = true;
+					String[] parameters2 = commandBody.split("by ");
+				        String task = parameters2[0];
+				        Date endDate = parseDate(parameters2[1]);
 
-		for (int i = 1; i < parameters.length; i++) {
-			if (parameters[i].toLowerCase().equals("by")) {
-				String[] parameters2 = commandBody.split("by ");
-				String task = parameters2[0];
-				Date endDate = parseDate(parameters2[1]);
+				        commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task, endDate);
+				        return commandUpdateObj;
+			        }
+		        }
+                }
+                if(haveEvents == false && haveDeadlines == false) {
+		        String task = commandBody;
+		        commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task);
 
-				commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task, endDate);
-				return commandUpdateObj;
-			}
-		}
-
-		String task = commandBody;
-		commandUpdateObj = new UpdateCommand(indexOfTaskToUpdate, task);
-
-		return commandUpdateObj;
+		        return commandUpdateObj;
+                } 
 	}
 
 	private static Date parseDate(String dateInString) {
