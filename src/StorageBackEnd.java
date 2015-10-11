@@ -67,6 +67,10 @@ public class StorageBackEnd {
 	public String getFileName() {
 		return currentFile;
 	}
+	
+	public ArrayList<Integer> getTaskId(){
+		return keys;
+	}
 
 
 	/**************** Methods ***********************/
@@ -100,7 +104,7 @@ public class StorageBackEnd {
 
 	public void write(Task task){
 
-		Integer taskKey = task.hashCode()%HASH_SIZE;
+		Integer taskKey = task.hashCode();
 		map.put(taskKey, task);
 		keys.add(taskKey);
 		String json = gson.toJson(map);
