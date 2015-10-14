@@ -1,10 +1,14 @@
 package doordonote.command;
 
-import doordonote.storage.Storage;
+import doordonote.logic.Controller;
 
 public interface Command {
-	boolean isRedoable();
-	String run();
-	boolean setStorage(Storage storageObj);
-	String run(Storage storageObj);
+	/**
+     * @return  {@code true} if the command can be undone
+     * 			{@code false} otherwise
+	 */
+	boolean isUndoable();
+	
+	String undo();
+	String execute(Controller controller);
 }
