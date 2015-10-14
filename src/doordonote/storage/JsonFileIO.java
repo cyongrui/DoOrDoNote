@@ -143,6 +143,14 @@ public class JsonFileIO {
 		if(!map.isEmpty()){
 			map.remove(taskToDelete.hashCode());
 			String json = gson.toJson(map, type);
+<<<<<<< HEAD
+=======
+//			Integer deleteId = keys.get(indexOfTaskToDelete);
+			map.remove(keys.get(indexOfTaskToDelete-1));
+			keys.remove(indexOfTaskToDelete-1);
+			String json = gson.toJson(map);
+			undo.add(json);
+>>>>>>> 81cc74a59ec2e7b7ea1b1f1295e8ae71913417e8
 			try{
 				writeToFile(json);
 			}
