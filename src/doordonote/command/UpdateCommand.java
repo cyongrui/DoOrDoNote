@@ -32,7 +32,7 @@ public class UpdateCommand extends RedoableCommand {
 //	}
 
 	public String run() {
-		if (storageObj != null) {
+		if (storageObj == null) {
 			return "Error in storage object";
 		} else {
 			return storageObj.update(indexOfTaskToUpdate, task, startDate, endDate);
