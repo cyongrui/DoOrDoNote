@@ -10,53 +10,54 @@ import java.util.HashMap;
 import java.lang.reflect.Type;
 import java.util.Stack;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.ArrayList;
-import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /*
  * 
  *  @author: Chen Yongrui
- *  Still need to resolve hash collision??
- *  Undo/redo needs work and will not work for update
+ * 
  *  Need more testing
  *  set method might need checking
- *  no task creator yet
+ *  
  */
 
 
-public class StorageBackEnd {
+public class JsonFileIO {
 
 	private static final String DEFAULT_NAME = "data.json";
 	private static final String FILE_TYPE = ".json";
+	private static final String INITIAL_JSONSTRING = "{}";
 	private static final int HASH_SIZE = 4099;
 
-	private final Gson gson = new Gson();
+	private final Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, 
+			new TaskClassAdapter<Task>()).create();
+
+	private final Type type = new TypeToken<Map<Integer, Task>>(){}.getType();
 	private Map<Integer, Task> map = new HashMap<>(HASH_SIZE);
-	private final Stack<String> undo = new Stack<String>();
-	private final Stack<String> redo = new Stack<String>();
+
 	private ArrayList<Task> listTask;
 	private ArrayList<Integer> keys = new ArrayList<Integer>();
-	//	private Set<Integer> keys;
 
 
 
-	/************** Data Members **********************/
+	private final Stack<String> undo = new Stack<String>();
+	private final Stack<String> redo = new Stack<String>();
 
 	private static String currentFile;
 
 
 	/************** Constructors **********************/
 
-	public StorageBackEnd(){
+	public JsonFileIO(){
 		currentFile = DEFAULT_NAME;
 		initialize();
 	}
 
-	public StorageBackEnd(String name){
+	public JsonFileIO(String name){
 		if(!name.contains(FILE_TYPE)){
 			name += FILE_TYPE;
 		}
@@ -68,6 +69,10 @@ public class StorageBackEnd {
 
 	public String getFileName() {
 		return currentFile;
+	}
+
+	public ArrayList<Integer> getTaskId(){
+		return keys;
 	}
 
 
@@ -83,15 +88,21 @@ public class StorageBackEnd {
 			File file = new File(currentFile);
 			if(!file.exists()){
 				file.createNewFile();
-				undo.push("");
+				FileWriter fw = new FileWriter(file);
+				fw.write(INITIAL_JSONSTRING);
+				fw.close();
+				//				undo.push("");
 			}			
 			else{
 				map = jsonToMap();
-				for (Integer key: map.keySet()){
-					keys.add(key);
+				if(map!=null){
+					for (Integer key: map.keySet()){
+						keys.add(key);
+					}
+					listTask = read();	
 				}
-				listTask = read();
-				undo.push(getFileString(currentFile));
+				
+				//			undo.push(getFileString(currentFile));
 			}
 		}
 		catch (IOException e) {
@@ -100,12 +111,12 @@ public class StorageBackEnd {
 	}
 
 
-	public void write(Task task){
+	protected void write(Task task){
 
-		Integer taskKey = task.hashCode()%HASH_SIZE;
+		Integer taskKey = task.hashCode();
 		map.put(taskKey, task);
 		keys.add(taskKey);
-		String json = gson.toJson(map);
+		String json = gson.toJson(map, type);
 		try{
 			writeToFile(json);
 		}
@@ -113,7 +124,7 @@ public class StorageBackEnd {
 		catch(IOException e){
 			e.printStackTrace();
 		}
-		undo.push(json);
+		//		undo.push(json);
 	}
 
 
@@ -129,13 +140,11 @@ public class StorageBackEnd {
 		}
 	}
 
-	public void delete(int indexOfTaskToDelete){
+	protected void delete(Task taskToDelete) throws EmptyTaskListException{
 
 		if(!map.isEmpty()){
-//			Integer deleteId = keys.get(indexOfTaskToDelete);
-			map.remove(keys.get(indexOfTaskToDelete));
-			String json = gson.toJson(map);
-			undo.add(json);
+			map.remove(taskToDelete.hashCode());
+			String json = gson.toJson(map, type);
 			try{
 				writeToFile(json);
 			}
@@ -146,19 +155,25 @@ public class StorageBackEnd {
 		}
 
 		else{
-			// Throw Exception here
-			System.out.println("No task to delete");
+			throw  new EmptyTaskListException();
 		}
+
 	}
-	
-	public void update(int indexOfTaskToUpdate, Task newUpdatedTask){
-		delete(indexOfTaskToUpdate);
-		write(newUpdatedTask);
+
+	protected void update(Task taskToUpdate, Task newUpdatedTask) 
+			throws EmptyTaskListException{
+		try{
+			delete(taskToUpdate);
+			write(newUpdatedTask);
+		}
+		catch(EmptyTaskListException e){
+			throw e;
+		}
 	}
 
 	//This method reads the current json file and returns an
-	//array of Task
-	public ArrayList<Task> read() throws IOException{
+	//arraylist of Task
+	protected ArrayList<Task> read() throws IOException{
 		Task[] arrTask;
 		Map<Integer, Task> jsonMap = jsonToMap();
 		arrTask = jsonMap.values().toArray(new Task[jsonMap.size()]);
@@ -201,7 +216,6 @@ public class StorageBackEnd {
 	// This method gets json string from currentFile and map it
 	private Map<Integer, Task> jsonToMap() throws IOException {
 		String json = getFileString(currentFile);
-		Type type = new TypeToken<Map<Integer, Task>>(){}.getType();
 		Map<Integer, Task> jsonMap = gson.fromJson(json, type);
 		return jsonMap;
 	}
@@ -217,7 +231,7 @@ public class StorageBackEnd {
 
 
 	// This method reads strings from a file
-	public static String getFileString(String fileName) throws IOException{
+	protected static String getFileString(String fileName) throws IOException{
 
 		byte[] encoded = Files.readAllBytes(Paths.get(fileName));
 		return new String(encoded);
