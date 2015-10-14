@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import doordonote.command.Command;
-import doordonote.parser.Parser;
+import doordonote.commandfactory.Parser;
 import doordonote.storage.Storage;
 import doordonote.storage.Task;
 
