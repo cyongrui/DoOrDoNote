@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 
 public class UI {
 
-    private static final String MESSAGE_WELCOME = "Welcome to Collate!";
+    private static final String MESSAGE_WELCOME = "Welcome to DoOrDoNote!";
     private static final String MESSAGE_COMMAND_PROMPT = "Command: ";
     private static final String MESSAGE_EXIT = "Goodbye!";
 
@@ -64,6 +64,7 @@ public class UI {
 
     	System.out.print(TASK_LIST_HEADER);
     	System.out.print(TASK_LIST_DIVIDER);
+    	System.out.println();
         
         int count = 1;
 
@@ -79,6 +80,8 @@ public class UI {
         	System.out.println("*None*");
         }
         
+        System.out.println();
+        
         System.out.print(DEADLINES_HEADER);
         for(int j=0; j<taskList.size(); j++) {
         	if(taskList.get(j).getTaskType() == 1) {
@@ -90,6 +93,8 @@ public class UI {
         if(haveDeadlines == false) {
         	System.out.println("*None*");
         }
+        
+        System.out.println();
 
         System.out.print(FLOATING_TASK_HEADER);
         for(int k=0; k<taskList.size(); k++) {
@@ -102,6 +107,8 @@ public class UI {
         if(haveDeadlines == false) {
         	System.out.println("*None*");
         }
+        
+        System.out.println();
 
     }
 
