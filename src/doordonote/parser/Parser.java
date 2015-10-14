@@ -5,8 +5,12 @@ import java.io.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.util.logging.*;
 
 public class Parser {
+	
+	// Obtain a suitable logger.
+        private static Logger logger = Logger.getLogger("Parser");
 
 	public Command parse(String command) {
 		
@@ -120,13 +124,18 @@ public class Parser {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM hh:mm");
                 Date date = null;
                 
+                // log a message at INFO level
+                logger.log(Level.INFO, "going to start processing");
+                
                 try {
                 	date = formatter.parse(dateInString);
                 } 
                 catch (ParseException e) {
-                        ;
+                        //log a message at WARNING level
+                        logger.log(Level.WARNING, "processing error", e);
                 }
-
+                logger.log(Level.INFO, "end of processing");
+                
                 return date;
 
 	}
