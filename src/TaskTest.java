@@ -8,78 +8,57 @@ public class TaskTest {
 
 	
 	@Test
-	public void testEqualsWithSameFloatingTask() {
-		Task task1 = new Task("test");
-		assertTrue(task1.equals(task1));
-	}
-	
-	
-	@Test
-	public void testHashCodeWithSameFloatingTask() {
-		Task task1 = new Task("test");
-		Task task2 = new Task("test");
+	public void testSameFloatingTask() {
+		Task task1 = new FloatingTask("test");
+		Task task2 = new FloatingTask("test");
 		assertTrue(task1.hashCode() == task2.hashCode());
+		assertTrue(task1.equals(task2));
 	}
 	
 	
+	
 	@Test
-	public void testEqualsWithSameDeadlineTask() {
+	public void testSameDeadlineTask() {
 		Date date1 = new Date(2015, 1, 1, 1, 1);
 		Date date2 = new Date(2015, 1, 1, 1, 1);
-		Task task1 = new Task("test", date1);
-		Task task2 = new Task("test", date2);
+		Task task1 = new DeadlineTask("test", date1);
+		Task task2 = new DeadlineTask("test", date2);
+		assertTrue(task1.hashCode() == task2.hashCode());
 		assertTrue(task1.equals(task2));
 	}
 	
 	
 	@Test
-	public void testHashCodeWithSameDeadlineTask() {
-		Date date1 = new Date(2015, 1, 1, 1, 1);
-		Date date2 = new Date(2015, 1, 1, 1, 1);
-		Task task1 = new Task("test", date1);
-		Task task2 = new Task("test", date2);
-		assertTrue(task1.hashCode() == task2.hashCode());
-	}
-	
-	
-	@Test
-	public void testEqualsWithSameEventTask() {
+	public void testSameEventTask() {
 		Date date1 = new Date(2015, 1, 1, 1, 1);
 		Date date2 = new Date(2015, 10, 3);
-		Task task1 = new Task("test", date1, date2);
-		Task task2 = new Task("test", date1, date2);
+		Task task1 = new EventTask("test", date1, date2);
+		Task task2 = new EventTask("test", date1, date2);
+		assertTrue(task1.hashCode() == task2.hashCode());
 		assertTrue(task1.equals(task2));
 	}
 	
 	
-	@Test
-	public void testHashCodeWithSameEventTask() {
-		Date date1 = new Date(2015, 1, 1, 1, 1);
-		Date date2 = new Date(2015, 10, 3);
-		Task task1 = new Task("test", date1, date2);
-		Task task2 = new Task("test", date1, date2);
-		assertTrue(task1.hashCode() == task2.hashCode());
-	}
 	
 	@Test
-	public void testEqualsWithDifferentEventTask() {
+	public void testDifferentEventTask() {
 		Date date1 = new Date(2015, 1, 1, 1, 1);
 		Date date2 = new Date(2015, 10, 3);
 		Date date3 = new Date(2015, 1, 1, 1, 2);
-		Task task1 = new Task("test", date1, date2);
-		Task task2 = new Task("test", date1, date3);
+		Task task1 = new EventTask("test", date1, date2);
+		Task task2 = new EventTask("test", date1, date3);
+		assertFalse(task1.hashCode() == task2.hashCode());
 		assertFalse(task1.equals(task2));
 	}
 	
-	
 	@Test
-	public void testHashCodeWithDifferentEventTask() {
+	public void testDifferentTask() {
 		Date date1 = new Date(2015, 1, 1, 1, 1);
-		Date date2 = new Date(2015, 10, 3);
 		Date date3 = new Date(2015, 1, 1, 1, 2);
-		Task task1 = new Task("test", date1, date2);
-		Task task2 = new Task("test", date1, date3);
+		Task task1 = new DeadlineTask("test", date1);
+		Task task2 = new EventTask("test", date1, date3);
 		assertFalse(task1.hashCode() == task2.hashCode());
+		assertFalse(task1.equals(task2));
 	}
 
 }
