@@ -1,12 +1,11 @@
+package doordonote.storage;
+
 import java.util.Date;
 
 public class DeadlineTask extends Task {
 
 	private Date endDate;
 	
-	public DeadlineTask(){
-		
-	}
 	
 	public DeadlineTask(String description, Date endDate){
 		super(description);
