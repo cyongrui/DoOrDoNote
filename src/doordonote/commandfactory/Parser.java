@@ -1,4 +1,4 @@
-package doordonote.parser;
+package doordonote.commandfactory;
 
 import doordonote.command.*;
 import java.util.Date;
