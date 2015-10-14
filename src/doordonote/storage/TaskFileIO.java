@@ -1,8 +1,4 @@
-package doordonote.storage;
-
 import java.util.Date;
-import java.util.ArrayList;
-import java.io.IOException;
 
 public class TaskFileIO implements FileIO {
 
@@ -56,10 +52,6 @@ public class TaskFileIO implements FileIO {
 		catch(EmptyTaskListException e){
 			return MESSAGE_NO_TASK_TO_DELETE;
 		}
-	}
-	
-	public ArrayList<Task> read() throws IOException{
-		return jsonFileIO.read();
 	}
 
 	private Task createTask(String description, Date startDate,

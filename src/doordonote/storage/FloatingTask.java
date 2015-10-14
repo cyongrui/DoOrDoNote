@@ -1,4 +1,3 @@
-package doordonote.storage;
 
 public class FloatingTask extends Task {
 	

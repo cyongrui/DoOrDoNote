@@ -1,5 +1,3 @@
-package doordonote.storage;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -143,16 +141,8 @@ public class JsonFileIO {
 	protected void delete(Task taskToDelete) throws EmptyTaskListException{
 
 		if(!map.isEmpty()){
-<<<<<<< HEAD:src/doordonote/storage/JsonFileIO.java
 			map.remove(taskToDelete.hashCode());
 			String json = gson.toJson(map, type);
-=======
-//			Integer deleteId = keys.get(indexOfTaskToDelete);
-			map.remove(keys.get(indexOfTaskToDelete-1));
-			keys.remove(indexOfTaskToDelete-1);
-			String json = gson.toJson(map);
-			undo.add(json);
->>>>>>> be9e6f3e751c9f70529b848bb1708150f80be5ca:src/doordonote/storage/StorageBackEnd.java
 			try{
 				writeToFile(json);
 			}
