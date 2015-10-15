@@ -2,40 +2,46 @@ package doordonote.command;
 
 import java.util.Date;
 
-public class UpdateCommand extends RedoableCommand {
+import doordonote.logic.Controller;
+import doordonote.storage.Task;
 
-	protected int indexOfTaskToUpdate = -1;
-	protected String task = null;
+public class UpdateCommand implements Command {
+
+	protected int taskID = -1;
+	protected String taskDescription = null;
 	protected Date startDate = null;
 	protected Date endDate = null;
+	protected Task originalTask = null;
+	protected Task newTask = null;
 	
-	// Constructor for events
-	public UpdateCommand(int indexOfTaskToUpdate, String task, Date startDate, Date endDate) {
-		this(indexOfTaskToUpdate, task, endDate);
+	public UpdateCommand(int taskID, String taskDescription, Date startDate, Date endDate) {
+		
+		assert(taskID > 0); 				// UpdateHandler should have checked that taskID > 0
+		assert(taskDescription != null); 	// UpdateHandler should have checked that taskDescription is not null 
+		this.taskDescription = taskDescription;
 		this.startDate = startDate;
-	}
-	
-	// Constructor for deadlines
-	public UpdateCommand(int indexOfTaskToUpdate, String task, Date endDate) {
-		this(indexOfTaskToUpdate, task);
 		this.endDate = endDate;
+		this.taskID = taskID;
 	}
-	
-	// Constructor for floating tasks
-	public UpdateCommand(int indexOfTaskToUpdate, String task) {
-		this.task = task;
-		this.indexOfTaskToUpdate = indexOfTaskToUpdate;
+	@Override
+	public boolean isUndoable() {
+		return true;
 	}
-	
-//	public UpdateCommand(int indexOfTaskToUpdate) {
-//		this.indexOfTaskToUpdate = indexOfTaskToUpdate;
-//	}
 
-	public String run() {
-		if (storageObj == null) {
-			return "Error in storage object";
-		} else {
-			return storageObj.update(indexOfTaskToUpdate, task, startDate, endDate);
-		}
+	@Override
+	public String undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	public String execute(Controller controller) {
+		controller.add(taskDescription, startDate, endDate);
+		controller.delete(taskID);
+		return "Task completed";
+	}
+	
+
+
+
 }

@@ -15,8 +15,8 @@ public class DeleteCommand implements Command {
 	 * 			This is the ID of the task as seen from the UI.
 	 */
 	public DeleteCommand(int taskID) {
-		// Delete handler object should have checked that taskID is not negative
-		assert(taskID >= 0);
+		// DeleteHandler should have checked that taskID is more than zero
+		assert(taskID > 0);
 		this.taskID = taskID;
 	}
 	
