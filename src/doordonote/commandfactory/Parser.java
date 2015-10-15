@@ -6,31 +6,57 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 public class Parser {
+	
+	public Command parse(String userInput) {
 
-	public Command parse(String command) {
-
-		String commandType = getCommandType(command);
+		String commandType = getCommandType(userInput);
+		String commandBody = removeFirstWord(userInput);
+		AbstractCommandHandler handler = null;
 
 		switch (commandType) {
 
-		case "add":
-
-			return parseAdd(command);
-
-		case "delete":
-
-			return parseDelete(command);
-
-		case "update":
-
-			return parseUpdate(command);
-
-		default:
-
+		case "add" :
+			// addm and addh?
+			handler = new AddHandler(commandBody);
+			break;
+			
+		case "delete" :
+			handler = new DeleteHandler(commandBody);
+			break;
+			
+		case "update" :
+			handler = new UpdateHandler(commandBody);
+			break;
+			
+		case "undo" :
+			handler = new UndoHandler(commandBody);
+			break;
+		
+		case "redo" :
+			handler = new RedoHandler(commandBody);
+			break;
+		
+		case "find" :
+			handler = new FindHandler(commandBody);
+			break;
+		
+		case "finish" :
+			handler = new FinishHandler(commandBody);
+			break;
+		
+		case "help" :
+			handler = new HelpHandler(commandBody);
+			break;
+//		case "get" :
+//		case "restore" :
+//		case "path" :
+			
+		default :
+			// throw exception
 			System.out.println("Error");
-			return null;
-
 		}
+		
+		return handler.generateCommand();
 	}
 
 	private static Command parseAdd(String command) {
