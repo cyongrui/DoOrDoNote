@@ -3,12 +3,11 @@ package doordonote.commandfactory;
 import doordonote.command.Command;
 
 public abstract class AbstractCommandHandler {
-	public AbstractCommandHandler(String commmandBody) {
-//		System.out.println("test");
+	protected String commandBody = null;
+	
+	public AbstractCommandHandler(String commandBody) {
+		this.commandBody = commandBody;
 	}
 
-	public Command generateCommand() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public abstract Command generateCommand();
 }
