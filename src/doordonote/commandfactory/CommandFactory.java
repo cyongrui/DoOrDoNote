@@ -6,6 +6,7 @@ import doordonote.command.*;
 //import java.util.Date;
 //import java.text.SimpleDateFormat;
 //import java.text.ParseException;
+import doordonote.common.Util;
 
 
 public class CommandFactory {
@@ -18,7 +19,7 @@ public class CommandFactory {
 	public Command parse(String userInput) {
 
 		String commandType = getCommandType(userInput);
-		String commandBody = removeFirstWord(userInput);
+		String commandBody = Util.removeFirstWord(userInput);
 		AbstractCommandHandler handler = null;
 
 		switch (commandType) {
@@ -65,6 +66,11 @@ public class CommandFactory {
 		}
 		
 		return handler.generateCommand();
+	}
+	
+	private static String getCommandType(String userCommand) {
+		String commandType = Util.getFirstWord(userCommand).toLowerCase();
+		return commandType;
 	}
 //
 //	private static Command parseAdd(String command) {
@@ -184,23 +190,5 @@ public class CommandFactory {
 //
 //	}
 
-	private static String getCommandType(String userInput) {
 
-		String commandType = getFirstWord(userInput).toLowerCase();
-		return commandType;
-
-	}
-
-	private static String getFirstWord(String userInput) {
-
-		String firstWord = userInput.trim().split("\\s+")[0];
-		return firstWord;
-
-	}
-
-	private static String removeFirstWord(String userInput) {
-
-		return userInput.replace(getFirstWord(userInput), "").trim();
-
-	}
 }

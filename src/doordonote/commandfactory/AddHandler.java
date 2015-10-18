@@ -9,12 +9,11 @@ import com.joestelmach.natty.Parser;
 import doordonote.command.AddCommand;
 import doordonote.command.Command;
 
-public class AddHandler extends AbstractCommandHandler {
+public class AddHandler extends AbstractAddCommandHandler {
 	protected Parser dateParser = null;
 	
 	public AddHandler(String commandBody, Parser dateParser) {
-		super(commandBody);
-		this.dateParser = dateParser;
+		super(commandBody, dateParser);
 	}
 
 	

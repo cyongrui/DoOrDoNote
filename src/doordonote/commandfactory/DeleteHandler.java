@@ -2,6 +2,7 @@ package doordonote.commandfactory;
 
 import doordonote.command.Command;
 import doordonote.command.DeleteCommand;
+import doordonote.common.Util;
 
 public class DeleteHandler extends AbstractCommandHandler {
 
@@ -12,7 +13,7 @@ public class DeleteHandler extends AbstractCommandHandler {
 	@Override
 	public Command generateCommand() {
 		try {
-			int indexToDelete = Integer.parseInt(commandBody.trim());
+			int indexToDelete = Integer.parseInt(Util.getFirstWord(commandBody));
 			if (indexToDelete <= 0) {
 				// throw exception
 				return null;
